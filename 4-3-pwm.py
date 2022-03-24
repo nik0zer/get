@@ -15,7 +15,8 @@ try:
         print("enter occupancy in range [0:1]")
         occupancy = float(input())
         occupancy = 100 * occupancy
-        pwm.start(occupancy)
+        if occupancy >=0 and occupancy <= 100:
+            pwm.start(occupancy)
 finally:
     IO.output(pin, 0)
     IO.cleanup()
