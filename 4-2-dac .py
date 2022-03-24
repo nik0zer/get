@@ -16,12 +16,12 @@ try:
     while(1):
         for i in range(0, 256):
             IO.output(dac, decimal2binary(i))
-            tm.sleep(time)
+            tm.sleep(time/(256*2))
             
         
         for i in range(255,-1, -1):
             IO.output(dac, decimal2binary(i))
-            tm.sleep(time)
+            tm.sleep(time/(256*2))
 finally:
     IO.output(dac, 0)
     IO.cleanup()
