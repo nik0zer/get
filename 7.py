@@ -1,5 +1,6 @@
 import RPi.GPIO as IO
 import time as tm
+import matplotlib.pyplot as plt
 
 def decimal2binary(value):
     return [int(bit) for bit in bin(value)[2:].zfill(8)]
@@ -11,7 +12,7 @@ leds = [21, 20, 16, 12, 7, 8, 25, 24]
 dac.reverse()
 
 IO.setmode(IO.BCM)
-IO.setup(troyka, IO.OUT, initial = IO.HIGH)
+IO.setup(troyka, IO.OUT)
 IO.setup(dac, IO.OUT)
 IO.setup(leds, IO.OUT)
 IO.setup(comp, IO.IN)
@@ -47,27 +48,39 @@ def adc_new():
         sum += weight * dac_val[7 - i]
         weight *= 2
     IO.output(dac, 0)
-    print(dac_val)
     return sum
 
 
 
 try:
     vals_of_capasitor = []
-    IO.setup(17, IO.HIGH)
+    IO.output(troyka, IO.HIGH)
     time_of_start = tm.time()
     while(adc_new() <= 256 * 0.97):
         val = adc_new()
         IO.output(leds, decimal2binary(val))
         vals_of_capasitor.append(val)
         tm.sleep(0.001)
-    IO.setup(17, IO.HIGH)
-    while(adc_new() >= 256 * 0.97):
+        print(val)
+    IO.output(troyka, IO.LOW)
+    while(adc_new() >= 256 * 0.02):
         val = adc_new()
         IO.output(leds, decimal2binary(val))
         vals_of_capasitor.append(val)
         tm.sleep(0.001)
+        print(val)
     time_of_end = tm.time()
+    plt.plot(vals_of_capasitor)
+    with  open("data.txt", 'w')  as  data:
+        for i in range(len(vals_of_capasitor)):
+             data.write(str(vals_of_capasitor[i]) + '\n')
+    with  open("settings.txt", 'w')  as  settings:
+        settings.write(str(time_of_end - time_of_start) +'\n')
+        settings.write(str((time_of_end - time_of_start)/ len(vals_of_capasitor))+'\n')
+        settings.write(str(len(vals_of_capasitor) / (time_of_end - time_of_start))+'\n')
+        settings.write(str(3.3*0.02)+"-"+str(3.3*0.97)+'\n')
+        settings.write(str(3.3/256)+'\n')
+    plt.show()
 finally:
     IO.output(dac, 0)
     IO.cleanup()
