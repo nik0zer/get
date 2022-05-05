@@ -83,8 +83,8 @@ try:
         for i in range(len(vals_of_capasitor)):
              data.write(str(vals_of_capasitor[i]) + '\n')
     with  open("settings.txt", 'w')  as  settings:
-        settings.write("Время эксперимента = "+ str((time_of_end - time_of_start) / len(vals_of_capasitor))+ '\n')
-        settings.write("Время периода = " + str( time_of_end - time_of_start) + '\n')
+        settings.write("Время эксперимента = "+ str((time_of_end - time_of_start) )+ '\n')
+        settings.write("Время периода = " + str(( time_of_end - time_of_start)/ len(vals_of_capasitor)) + '\n')
         settings.write("Средняя частота дискретизации = " + str(len(vals_of_capasitor) / (time_of_end - time_of_start))+ '\n')
         settings.write(str(3.3/256)+'\n')
 
